@@ -7,7 +7,9 @@ export const validateNewTask = [
     body('category')
         .optional()
         .isIn(['w-maxxing', 'sahur', 'brainrot'])
-        .withMessage("Category must be 'w-maxxing', 'sahur', or 'brainrot'")
+        .withMessage("Category must be 'w-maxxing', 'sahur', or 'brainrot'"), 
+    body('description')
+        .optional()
 ]
 
 export const validateUpdateTask = [
