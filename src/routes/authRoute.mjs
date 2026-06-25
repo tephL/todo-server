@@ -3,6 +3,7 @@ import passport from "passport";
 import '../strategies/passport-local.mjs';
 import * as userMid from '../middlewares/user-validator.mjs';
 import * as helpersMid from '../middlewares/helpers-mid.mjs';
+import * as authMid from '../middlewares/auth-mid.mjs';
 
 const router = Router();
 
@@ -21,6 +22,23 @@ router.post('/login',
                 req.session.save(() => res.status(200).json(user));
             });
         })(req, res, next)
+);
+
+router.get('/me',
+    authMid.isUserAuthenticated,
+    (req, res) => {
+        return res.status(200).json(req.user);
+    }
+);
+
+router.delete('/logout',
+    authMid.isUserAuthenticated, 
+    (req, res) => {
+        req.logout((err) => {
+            if(err) return res.sendStatus(500);
+            return res.sendStatus(204);
+        });
+    }
 );
 
 export default router;
