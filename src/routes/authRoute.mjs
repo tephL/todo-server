@@ -12,7 +12,10 @@ router.post('/login',
     (req, res, next) => 
         passport.authenticate('local', (err, user, info) => {
             if(err) return res.sendStatus(500);
-            if(!user) return res.status(400).json({ message: info?.message | "Unauthorized" });
+            console.log(err);
+            console.log(user);
+            console.log(info);
+            if(!user) return res.status(400).json(info || { message: "Unauthorized" });
             req.logIn(user, (err) => {
                 if(err) return res.status(500).json({ message: "Login failed" });
                 req.session.save(() => res.status(200).json(user));
