@@ -21,7 +21,7 @@ app.use(session({
     }, 
     store: new pgSession({
         pool: pool, 
-        tableName: 'sessions',
+        tableName: 'session',
         pruneSessionInterval: (1000 * 60) * 10,
         disableTouch: true
     })
