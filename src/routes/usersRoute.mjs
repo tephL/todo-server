@@ -2,8 +2,10 @@ import { Router } from "express";
 import * as usersMid from "../middlewares/user-validator.mjs";
 import * as helpersMid from '../middlewares/helpers-mid.mjs';
 import * as usersCtl from '../controllers/users-ctl.mjs';
+import * as authMid from '../middlewares/auth-mid.mjs';
 
 const router = Router();
+router.use(authMid.isUserAuthenticated);
 
 router.post('/', usersMid.validateNewUser, helpersMid.catchValidationError, usersCtl.createUser);
 router.get('/', helpersMid.paginationHelper, helpersMid.catchValidationError, usersCtl.getUsers);
