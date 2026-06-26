@@ -6,6 +6,7 @@ import * as authMid from '../middlewares/auth-mid.mjs';
 
 const router = Router();
 router.use(authMid.isUserAuthenticated);
+router.use(authMid.isUserAdmin);
 
 router.post('/', usersMid.validateNewUser, helpersMid.catchValidationError, usersCtl.createUser);
 router.get('/', helpersMid.paginationHelper, helpersMid.catchValidationError, usersCtl.getUsers);

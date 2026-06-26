@@ -4,7 +4,7 @@ import * as helpersServ from './helpers-serv.mjs';
 
 export async function createUser({ username, password, }){
     const user = await query(
-        "INSERT INTO users(username, hashed_password) VALUES ($1, $2) RETURNING username, user_id, created_at", 
+        "INSERT INTO users(username, hashed_password) VALUES ($1, $2) RETURNING role_id, username, user_id, created_at", 
         [username, securityServ.generateHashedPassword(password)]
     );
     return user.rows[0];
@@ -13,8 +13,8 @@ export async function createUser({ username, password, }){
 export async function getUsers({ page, limit }){
     try{
         const users = await query(
-            "SELECT user_id, username, archived_at, created_at FROM users OFFSET $1 LIMIT $2",
-            [(page - 1) * limit, limit]
+            "SELECT role_id, user_id, username, archived_at, created_at FROM users OFFSET $1 LIMIT $2",
+            [(page - 1) * limit, limit + 1]
         );
         return users.rows;
     } catch(e){
@@ -36,7 +36,7 @@ export async function updateUser({ user_id, username, password }){
 
         let i = 2;
         const fieldsUpdates = Object.keys(updates).map(u => `${u} = $${i++}`);
-        const text = `UPDATE users SET ${fieldsUpdates.join(', ')} WHERE user_id = $1 RETURNING username, user_id, created_at`;
+        const text = `UPDATE users SET ${fieldsUpdates.join(', ')} WHERE user_id = $1 RETURNING role_id, username, user_id, created_at`;
         const values = [user_id, ...Object.values(updates)];
 
         const user = await query(text, values);

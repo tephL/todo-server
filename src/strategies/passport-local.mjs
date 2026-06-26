@@ -24,7 +24,8 @@ function filterUserInfo(user){
     return {
         username: user.username, 
         user_id: user.user_id, 
-        created_at: user.created_at
+        created_at: user.created_at, 
+        role_id: user.role_id
     }
 }
 

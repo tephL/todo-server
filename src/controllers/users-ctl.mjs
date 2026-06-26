@@ -15,7 +15,7 @@ export async function createUser(req, res){
 export async function getUsers(req, res){
     try{
         const { page, limit } = matchedData(req);
-        const users = await usersServ.getUsers({ page, limit: limit + 1 });
+        const users = await usersServ.getUsers({ page, limit });
         if(!users.length) return res.sendStatus(204);
         const lastPage = users.length <= limit;
         return res.status(200).json({ users: users.slice(0, limit), lastPage: lastPage });
