@@ -1,15 +1,19 @@
 import passport from "passport";
 import { Strategy } from "passport-local";
-import { prisma } from "../services/db.mjs";
+import { query } from "../services/db.mjs";
 import * as securityServ from '../services/security-serv.mjs';
 
 export default passport.use(new Strategy(async (username, password, cb) => {
-    const u = await prisma.users.findUnique({ where: { username: username } });
-    if(!u || u.archived_at) return cb(null, false, { message: "User does not exist" });
+    const u = await query(
+        "SELECT * FROM users WHERE username = $1",
+        [username]
+    );
+    const user = u.rows[0];
+    if(!user || user.archived_at) return cb(null, false, { message: "User does not exist" });
 
-    if(!securityServ.compareHashedPassword(password, u.hashed_password)) 
+    if(!securityServ.compareHashedPassword(password, user.hashed_password)) 
         return cb(null, false, { message: 'Incorrect credentials' });
-    return cb(null, filterUserInfo(u));
+    return cb(null, filterUserInfo(user));
 }));
 
 passport.serializeUser((user, done) => {
@@ -26,9 +30,13 @@ function filterUserInfo(user){
 
 passport.deserializeUser(async (user_id, done) => {
     try{
-        const u = await prisma.users.findUnique({ where: { user_id: user_id } });
-        if(!u || u.archived_at) return done(null, false, { message: "User does not exist" });
-        return done(null, filterUserInfo(u));
+        const u = await query(
+            "SELECT * FROM users WHERE user_id = $1",
+            [user_id]
+        );
+        const user = u.rows[0];
+        if(!user || user.archived_at) return done(null, false, { message: "User does not exist" });
+        return done(null, filterUserInfo(user));
     } catch(e){
         console.log(e);
     }

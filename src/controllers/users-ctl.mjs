@@ -5,18 +5,24 @@ export async function createUser(req, res){
     try{
         const { username, password } = matchedData(req);
         const u = await usersServ.createUser({ username, password });
-        return res.status(200).json(u);
+        return res.status(201).send(u);
     } catch(err){
-        console.log(err);
+        if(err.detail) return res.status(400).send({ message: err.detail });
         return res.sendStatus(500);
     }
 }
 
 export async function getUsers(req, res){
-    const { page, limit } = matchedData(req);
-    const users = await usersServ.getUsers({ page, limit });
-    if(!users.length) return res.sendStatus(204);
-    return res.status(200).json(users);
+    try{
+        const { page, limit } = matchedData(req);
+        const users = await usersServ.getUsers({ page, limit: limit + 1 });
+        if(!users.length) return res.sendStatus(204);
+        const lastPage = users.length <= limit;
+        return res.status(200).json({ users: users.slice(0, limit), lastPage: lastPage });
+    } catch(err){
+        if(err.detail) return res.status(400).send({ message: err.detail });
+        return res.sendStatus(500);
+    }
 }
 
 export async function updateUser(req, res){

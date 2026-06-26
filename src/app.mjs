@@ -17,7 +17,7 @@ app.use(session({
     resave: false, 
     secret: process.env.SESSION_SECRET, 
     cookie: {
-        maxAge: ( 1000 * 60 ) * 10 
+        maxAge: ( 1000 * 60 ) * 60
     }, 
     store: new pgSession({
         pool: pool, 
