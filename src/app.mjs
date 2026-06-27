@@ -4,6 +4,7 @@ import connectPgSimple from 'connect-pg-simple';
 import session from 'express-session';
 configDotenv();
 import usersRoute from './routes/usersRoute.mjs';
+import tasksRoute from './routes/tasksRoutes.mjs';
 import authRoute from './routes/authRoute.mjs';
 import { pool } from './services/db.mjs';
 import passport from 'passport';
@@ -28,6 +29,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/api/tasks', tasksRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/auth', authRoute);
 app.listen(PORT, () => {
