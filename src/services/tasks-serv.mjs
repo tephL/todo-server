@@ -2,9 +2,14 @@ import { query } from './db.mjs';
 import * as helperServ from './helpers-serv.mjs';
 
 export async function createTask({ title, description, category, user_id }){
+    const filtered = helperServ.sanitizeEmptyProps({ title, description, category });
+    const fields = Object.keys(filtered);
+    let i = 2;
+    const fieldCounts = fields.map(f => `$${i++}`);
+    const text = `INSERT INTO tasks (user_id, ${fields.join(', ')}) VALUES ($1, ${fieldCounts.join(', ')}) RETURNING task_id, title, description, status, category, created_at`;
     const t = await query(
-        "INSERT INTO tasks VALUES ($1, $2, $3, $4) RETURNING * ",
-        [user_id, title, description, category]
+        text, 
+        [user_id, ...Object.values(filtered)]
     );
     return t.rows[0];
 }
