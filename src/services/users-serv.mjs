@@ -14,7 +14,7 @@ export async function getUsers({ page, limit }){
     try{
         const users = await query(
             "SELECT role_id, user_id, username, archived_at, created_at FROM users OFFSET $1 LIMIT $2",
-            [(page - 1) * limit, limit + 1]
+            [(page - 1) * limit, Number(limit) + 1]
         );
         return users.rows;
     } catch(e){

@@ -13,4 +13,10 @@ router.post('/',
     taskCtl.createTask
 );
 
+router.get('/',
+    helperMid.paginationHelper, 
+    helperMid.catchValidationError,
+    taskCtl.getTasks
+);
+
 export default router;

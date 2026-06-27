@@ -12,3 +12,16 @@ export async function createTask(req, res){
         return res.sendStatus(500);
     }
 }
+
+export async function getTasks(req, res){
+    try{
+        const { page, limit } = req.query;
+        const tasks = await taskServ.getTasks({ page, limit, user_id: req.user.user_id });
+        if(!tasks.length) return res.sendStatus(204);
+        const lastPage = limit >= tasks.length;
+        return res.status(200).json({ tasks: tasks.slice(0, limit), lastPage: lastPage});
+    } catch(e){
+        console.log(e);
+        return res.sendStatus(500);
+    }
+}

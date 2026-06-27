@@ -15,10 +15,9 @@ export async function createTask({ title, description, category, user_id }){
 }
 
 export async function getTasks({ page, limit, user_id }){
-    const ts = await query(
-        "SELECT * FROM tasks WHERE user_id = $1 OFFSET $2 LIMIT $3",
-        [user_id, (page-1) * limit, limit + 1]
-    );
+    const text = "SELECT * FROM tasks WHERE user_id = $1 ORDER BY task_id OFFSET $2 LIMIT $3"; 
+    const values = [user_id, (page-1) * limit, Number(limit) + 1];
+    const ts = await query(text, values);
     return ts.rows;
 }
 
