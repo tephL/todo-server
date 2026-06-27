@@ -27,4 +27,10 @@ router.patch('/:task_id',
     taskCtl.updateTask
 );
 
+router.delete('/:task_id', 
+    helperMid.isParamInt('task_id'), 
+    helperMid.catchValidationError, 
+    taskCtl.deleteTask
+);
+
 export default router;

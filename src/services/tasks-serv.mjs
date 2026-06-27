@@ -17,7 +17,7 @@ export async function createTask({ title, description, category, user_id }){
 }
 
 export async function getTasks({ page, limit, user_id }){
-    const text = `SELECT ${returnFields.join(', ')} FROM tasks WHERE user_id = $1 ORDER BY task_id OFFSET $2 LIMIT $3`; 
+    const text = `SELECT ${returnFields.join(', ')} FROM tasks WHERE user_id = $1 AND archived_at IS NULL ORDER BY task_id OFFSET $2 LIMIT $3`; 
     const values = [user_id, (page-1) * limit, Number(limit) + 1];
     const ts = await query(text, values);
     return ts.rows;
@@ -35,7 +35,7 @@ export async function updateTask({ task_id, title, description, category, status
 
 export async function archiveTask(task_id){
     const dq = await query(
-        "UPDATE tasks SET archived_at = NOW() WHERE user_id = $1", 
+        "UPDATE tasks SET archived_at = NOW() WHERE task_id = $1", 
         [task_id]
     );
     return dq;

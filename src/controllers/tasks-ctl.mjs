@@ -36,3 +36,12 @@ export async function updateTask(req, res){
         return res.sendStatus(500);
     }
 }
+
+export async function deleteTask(req, res){
+    try{
+        const t = await taskServ.archiveTask(req.params.task_id);
+        return res.sendStatus(200);
+    } catch(e){
+        return res.sendStatus(500);
+    }
+}
