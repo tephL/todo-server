@@ -25,3 +25,14 @@ export async function getTasks(req, res){
         return res.sendStatus(500);
     }
 }
+
+export async function updateTask(req, res){
+    try{
+        const update = await taskServ.updateTask({ task_id: req.query.task_id, ...matchedData(req)});
+        if(!update) return res.sendStatus(204);
+        return res.status(200).json(update);
+    } catch(e){
+        console.log(e);
+        return res.sendStatus(500);
+    }
+}

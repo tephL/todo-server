@@ -19,4 +19,12 @@ router.get('/',
     taskCtl.getTasks
 );
 
+router.patch('/:task_id',
+    helperMid.isParamInt('task_id'),
+    helperMid.catchValidationError,
+    taskMid.validateUpdateTask,
+    helperMid.catchValidationError, 
+    taskCtl.updateTask
+);
+
 export default router;
