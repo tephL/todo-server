@@ -8,9 +8,11 @@ import tasksRoute from './routes/tasksRoutes.mjs';
 import authRoute from './routes/authRoute.mjs';
 import { pool } from './services/db.mjs';
 import passport from 'passport';
+import cors from 'cors';
 
 const PORT = process.env.PORT;
 const app = express();
+app.use(cors({ origin: process.env.ORIGIN_URL, credentials: true }));
 app.use(express.json());
 const pgSession = connectPgSimple(session);
 app.use(session({
