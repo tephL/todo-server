@@ -16,7 +16,10 @@ import cors from 'cors';
 
 const PORT = process.env.PORT;
 const app = express();
-app.use(cors({ origin: process.env.ORIGIN_URL, credentials: true }));
+app.use(cors({ 
+    origin: [ process.env.ORIGIN_URL, 'http://localhost:5173'], 
+    credentials: true 
+}));
 app.use(express.json());
 const pgSession = connectPgSimple(session);
 app.use(session({
